@@ -19,12 +19,9 @@ function getUserIdFromRequest(req) {
 // Obtener historial de gastos del usuario autenticado
 gastosController.getGastos = async (req, res) => {
   try {
-    const userId = getUserIdFromRequest(req);
-    if (!userId) return res.status(401).json({ error: 'No autorizado' });
-    
-    // Optimizar consulta: traer solo campos necesarios y limitar resultados
+    // Mostrar todos los gastos sin verificación de usuario
     const gastos = await Gasto.find(
-      { usuario: userId },
+      {},
       {
         categoria: 1,
         monto: 1,
