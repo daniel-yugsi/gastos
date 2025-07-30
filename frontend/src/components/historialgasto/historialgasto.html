@@ -1,0 +1,193 @@
+<div class="historial-container-pro">
+  <div class="header-section">
+    <div *ngIf="nombreUsuario" class="welcome-message">
+      <span class="material-icons user-icon"></span>
+      <span>¡Bienvenido(a), <b>{{ nombreUsuario }}</b>!</span>
+    </div>
+    <div class="header-actions">
+      <h2>Historial de Gastos</h2>
+      <button class="btn-volver" (click)="volverACalculadora()">
+        <span class="material-icons"></span>
+        Volver a Calculadora
+      </button>
+    </div>
+  </div>
+  <div *ngIf="mensaje" [class]="'mensaje-alert ' + (mensaje.includes('éxito') ? 'success' : 'error')">
+    <span class="material-icons">{{ mensaje.includes('éxito') ? 'check_circle' : 'error' }}</span>
+    {{ mensaje }}
+  </div>
+  <div *ngIf="cargando" class="spinner-row">
+    <span class="spinner-pro"></span>
+    <span class="cargando-text">Cargando historial, por favor espera...</span>
+  </div>
+  <div *ngIf="!cargando">
+    <table *ngIf="historial.length > 0" class="historial-table-pro">
+      <thead>
+        <tr>
+          <th>Mes/Año</th>
+          <th>Categoría</th>
+          <th>Monto</th>
+          <th>Descripción</th>
+          <th>Usuario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let gasto of historial; let i = index" [class.fila-par-pro]="i % 2 === 0">
+          <td>{{ gasto.mes }}/{{ gasto.anio }}</td>
+          <td>{{ gasto.categoria }}</td>
+          <td><span class="monto-pro">${{ gasto.monto | number:'1.2-2' }}</span></td>
+          <td>
+            <div *ngIf="gastoEditando?._id !== gasto._id && gastoABorrar?._id !== gasto._id">
+              {{ gasto.descripcion }}
+              <button class="btn-editar" (click)="editarDescripcion(gasto)" title="Editar">✏️</button>
+              <button class="btn-borrar" (click)="confirmarBorrado(gasto)" title="Borrar">🗑️</button>
+            </div>
+            <div *ngIf="gastoEditando?._id === gasto._id" class="editar-descripcion">
+              <input type="text" [(ngModel)]="nuevaDescripcion" placeholder="Nueva descripción">
+              <button class="btn-guardar" (click)="guardarDescripcion()" title="Guardar">💾</button>
+              <button class="btn-cancelar" (click)="cancelarEdicion()" title="Cancelar">❌</button>
+            </div>
+            <div *ngIf="gastoABorrar?._id === gasto._id" class="confirmar-borrado">
+              <span>¿Confirmar borrado?</span>
+              <button class="btn-confirmar" (click)="borrarGasto()" title="Confirmar">✅</button>
+              <button class="btn-cancelar" (click)="cancelarBorrado()" title="Cancelar">❌</button>
+            </div>
+          </td>
+          <td><span class="usuario-pro">{{ gasto.usuario?.nombre }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="historial.length === 0 && !mensaje" class="no-gastos-pro">
+      <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" width="60" style="opacity:0.5;margin-bottom:10px;">
+      <div>No hay gastos registrados.</div>
+    </div>
+  </div>
+</div>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+.historial-container-pro {
+  font-family: 'Roboto', Arial, sans-serif;
+  max-width: 900px;
+  margin: 40px auto 0 auto;
+  background: #f8fafc;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(25, 118, 210, 0.07);
+  padding: 36px 32px 32px 32px;
+}
+
+h2 {
+  font-weight: 700;
+  color: #1976d2;
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+.spinner-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.spinner-pro {
+  width: 32px;
+  height: 32px;
+  border: 4px solid #e3eaf6;
+  border-top: 4px solid #1976d2;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.cargando-text {
+  font-size: 1.1em;
+  color: #1976d2;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.historial-table-pro {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.06);
+  margin-bottom: 16px;
+}
+
+.historial-table-pro th, .historial-table-pro td {
+  padding: 16px 18px;
+  text-align: left;
+  font-size: 1.05em;
+}
+
+.historial-table-pro thead {
+  background: linear-gradient(90deg, #1976d2 80%, #42a5f5 100%);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.historial-table-pro tbody tr.fila-par-pro {
+  background: #f5f7fa;
+}
+
+.historial-table-pro tbody tr:not(.fila-par-pro) {
+  background: #e3eaf6;
+}
+
+.historial-table-pro tbody tr:hover {
+  background: #bbdefb !important;
+  transition: background 0.2s;
+}
+
+.monto-pro {
+  font-weight: bold;
+  color: #1976d2;
+  font-size: 1.08em;
+}
+
+.usuario-pro {
+  font-style: italic;
+  color: #333;
+  font-size: 1em;
+}
+
+.no-gastos-pro {
+  text-align: center;
+  color: #888;
+  font-size: 1.1em;
+  margin-top: 40px;
+}
+
+.error-pro {
+  color: #d32f2f;
+  background: #fff3f3;
+  border: 1px solid #f8d7da;
+  padding: 10px 18px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 700px) {
+  .historial-container-pro {
+    padding: 18px 4vw;
+  }
+  .historial-table-pro th, .historial-table-pro td {
+    padding: 10px 6px;
+    font-size: 0.97em;
+  }
+  h2 {
+    font-size: 1.3em;
+  }
+}
+</style>

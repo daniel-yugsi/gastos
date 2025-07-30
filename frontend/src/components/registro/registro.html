@@ -1,0 +1,67 @@
+<div class="registro-box">
+    <h1 class="title">Crear Cuenta</h1>
+    <p class="welcome-text">Únete y comienza a gestionar tus gastos</p>
+
+    <form (ngSubmit)="onSubmit()" #registroForm="ngForm" class="registro-form">
+      <div class="input-container">
+        <div class="input-box">
+          <span class="material-icons">person</span>
+          <input 
+            type="text"
+            id="nombre"
+            name="nombre"
+            [(ngModel)]="nombre"
+            required
+            placeholder="Tu nombre completo"
+            #nombreInput="ngModel">
+        </div>
+
+        <div class="input-box">
+          <span class="material-icons">mail</span>
+          <input 
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+            placeholder="Correo electrónico"
+            #emailInput="ngModel">
+        </div>
+
+        <div class="input-box">
+          <span class="material-icons">lock</span>
+          <input 
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+            placeholder="Contraseña"
+            #passwordInput="ngModel">
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="create-account-btn" 
+        [disabled]="!registroForm.form.valid">
+        <span>Crear Cuenta</span>
+        <span class="material-icons">arrow_forward</span>
+      </button>
+
+      <div class="login-section">
+        <p>¿Ya tienes cuenta?</p>
+        <a routerLink="/login" class="login-link">
+          Iniciar sesión
+          <span class="material-icons">login</span>
+        </a>
+      </div>
+    </form>
+
+    @if (errorMessage) {
+      <div class="error-banner">
+        <span class="material-icons">error_outline</span>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+  </div>

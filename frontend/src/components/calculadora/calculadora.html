@@ -1,0 +1,51 @@
+<div class="home-hero-bg">
+  <div class="home-hero-anim"></div>
+  <div class="home-hero-card animate-fade-in">
+    <div class="home-hero-header">
+      <div *ngIf="nombreUsuario" class="usuario-bienvenida" style="margin-bottom: 1rem; font-size: 1.2rem; color: #1976d2; display: flex; align-items: center; gap: 0.5rem;">
+        <span class="material-icons align-middle" style="font-size: 2rem;">person</span>
+        <span>¡Bienvenido(a), <b>{{ nombreUsuario }}</b>!</span>
+      </div>
+      <span class="material-icons home-hero-icon animate-pop">calculate</span>
+      <h1 class="home-hero-title animate-slide-down">
+        Calculadora de <span class="highlight">Gastos Deducibles</span>
+      </h1>
+      <p class="home-hero-desc animate-fade-in-delay">
+        Ingresa tus gastos en las categorías correspondientes para calcular el total deducible.
+      </p>
+    </div>
+    <form (ngSubmit)="calcularTotal()" class="home-hero-form animate-fade-in-delay">
+      <div *ngFor="let gasto of tiposGasto; let i = index" class="home-hero-input-group">
+        <label class="home-hero-label">{{ gasto.nombre }}:</label>
+        <div class="home-hero-input-wrapper">
+          <span class="home-hero-input-prefix">$</span>
+          <input
+            type="number"
+            [(ngModel)]="gasto.valor"
+            name="gasto{{i}}"
+            min="0"
+            step="0.01"
+            required
+            class="home-hero-input"
+            placeholder="Ingrese el valor"
+          />
+        </div>
+      </div>
+      <button type="submit" class="home-hero-btn animate-pop">
+        <span class="material-icons align-middle">summarize</span> Calcular Total
+      </button>
+    <button type="button" class="home-hero-btn-outline" (click)="cerrarSesion()">
+      <span class="material-icons align-middle">logout</span> Cerrar Sesión
+    </button>
+    <button type="button" class="home-hero-btn-outline" (click)="navigate('historialgasto')">
+      <span class="material-icons align-middle">history</span> Ver Historial de Gastos
+    </button>
+    </form>
+    <div *ngIf="totalGastos !== null" class="home-hero-result animate-fade-in">
+      <h5 class="mb-1 fw-bold">Total de gastos deducibles:</h5>
+      <span class="home-hero-total">${{ totalGastos | number:'1.2-2' }}</span>
+    </div>
+  </div>
+</div>
+<!-- Google Material Icons CDN -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">

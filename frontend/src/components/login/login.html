@@ -1,0 +1,55 @@
+<div class="registro-box">
+    <h1 class="title">Iniciar Sesión</h1>
+    <p class="welcome-text">Bienvenido de nuevo</p>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="registro-form">
+      <div class="input-container">
+        <div class="input-box">
+          <span class="material-icons">mail</span>
+          <input 
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+            placeholder="Correo electrónico"
+            #emailInput="ngModel">
+        </div>
+
+        <div class="input-box">
+          <span class="material-icons">lock</span>
+          <input 
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+            placeholder="Contraseña"
+            #passwordInput="ngModel">
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="create-account-btn" 
+        [disabled]="!loginForm.form.valid">
+        <span>Iniciar Sesión</span>
+        <span class="material-icons">login</span>
+      </button>
+
+      <div class="login-section">
+        <p>¿No tienes una cuenta?</p>
+        <a routerLink="/registro" class="login-link">
+          Crear cuenta
+          <span class="material-icons">person_add</span>
+        </a>
+      </div>
+    </form>
+
+    @if (errorMessage) {
+      <div class="error-banner">
+        <span class="material-icons">error_outline</span>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+  </div>
